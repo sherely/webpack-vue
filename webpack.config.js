@@ -4,8 +4,8 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var HtmlWebpackPlugin = require('html-webpack-plugin'); //生成html
 
 var ROOT_PATH = path.resolve(__dirname);
-var APP_PATH = path.join(ROOT_PATH, 'src/index'); //__dirname 中的app目录，以此类推
-var APP_FILE = path.join(APP_PATH, 'index.js'); //根目录文件index.js地址
+var APP_PATH = path.join(ROOT_PATH, 'src/tab'); //__dirname 中的app目录，以此类推
+var APP_FILE = path.join(APP_PATH, 'tab.js'); //根目录文件index.js地址
 var BUILD_PATH = path.join(ROOT_PATH, '/public'); //发布文件所存放的目录
 
 
@@ -29,9 +29,7 @@ module.exports = {
 	},
 	module: {
 
-		loaders: [
-			// 使用vue-loader 加载 .vue 结尾的文件
-			{
+		loaders: [{
 				test: /\.vue$/,
 				exclude: /^node_modules$/,
 				loader: 'vue'
@@ -42,11 +40,11 @@ module.exports = {
 			}, {
 				test: /\.css$/,
 				exclude: /^node_modules$/,
-				loader: ExtractTextPlugin.extract('style', ['css', 'autoprefixer'])
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader")
 			}, {
 				test: /\.scss$/,
 				exclude: /^node_modules$/,
-				loader: ExtractTextPlugin.extract('style', ['css', 'autoprefixer', 'sass'])
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!sass-loader")
 			}, {
 				test: /\.(png|jpg)$/,
 				exclude: /^node_modules$/,
@@ -60,8 +58,12 @@ module.exports = {
 				exclude: /^node_modules$/,
 				loader: 'babel'
 			}
-		]
-	},
+		]},
+		postcss: [
+      		require('autoprefixer')({
+       		 	browsers: ["last 20 version", "Firefox 15"]
+      	})
+    ],
 	Favlist: {
 		loaders: {
 			js: 'babel'
@@ -75,7 +77,7 @@ module.exports = {
 		}),
 		new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML
 			filename: './index.html', //生成的html存放路径，相对于 path
-			template: './src/index/index.html', //html模板路径
+			template: './src/tab/tab.html', //html模板路径
 			hash: false,
 		}),
 		new ExtractTextPlugin('[name].css')
